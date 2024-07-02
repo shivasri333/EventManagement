@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Venue</title>
+    <link rel="shortcut icon" type="x-icon" href="/images/home.png">
+    <style>
+        .home-icon {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1;
+        }
+
+        .home-icon img {
+            width: 50px;
+            height: 50px;
+        }
+
+        body {
+            background-color: #333333;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 50px;
+            color: white;
+        }
+
+        form {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            background-color: #f4f4f4;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 20px;
+        }
+
+        form div {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="number"],
+        textarea,
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button[type="submit"] {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        
+        .navigation {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            /* Adjusted to align towards right */
+            display: flex;
+            align-items: center;
+        }
+
+        .navigation a {
+            text-decoration: none;
+            color: red;
+            margin: 0 10px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .navigation a:hover {
+            color: #ffcc00;
+            /* Change to your desired hover color */
+        }
+
+        .navigation a[href="/logout"]:hover {
+            border: 2px solid red;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <a href="/adminHomePage" class="home-icon">
+        <img src="/images/home.png" alt="Home">
+    </a>
+    <div class="navigation">
+        <a href="/logout">Logout</a>
+    </div>
+    
+    <h2>Add New Venue</h2>
+    <form id="addVenueForm" enctype="multipart/form-data">
+        <div>
+            <label for="venue_name">Venue Name:</label>
+            <input type="text" id="venue_name" name="venue_name" required>
+        </div>
+        <div>
+            <label for="address">Address:</label>
+            <textarea id="address" name="address" required></textarea>
+        </div>
+        
+        <!-- Economy Seats -->
+        <div>
+            <label for="max_capacity">Maximum Capacity:</label>
+            <input type="number" id="max_capacity" name="max_capacity" required>
+        </div>
+         <div>
+            <label for="contact_person">Contact Person:</label>
+            <input type="text" id="contact_person" name="contact_person" required>
+        </div>
+         <div>
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" required>
+        </div>
+         <div>
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" name="phone" required>
+        </div>
+
+        <div>
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+
+    <script>
+        
+            // Add venue listener to form submission
+            document.getElementById("addVenueForm").addEventListener("submit", function (event) {
+                event.preventDefault(); // Prevent the default form submission behavior
+
+                // Fetch form data
+                const formData = new FormData(event.target);
+
+                // Send form data to the /addEvent endpoint
+                fetch("/addVenue", {
+                        method: "POST",
+                        body: formData
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // If the response is successful, redirect or show a success message
+                            window.location.href = "/admin/venues"; // Redirect to success page
+                        } else {
+                            // If there's an error, handle it appropriately
+                            throw new Error("Failed to add event. Please try again later.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error adding event:", error);
+                        // Display an error message to the user
+                        alert("Failed to add event. Please try again later.");
+                    });
+            });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Home</title>
+	<link rel="shortcut icon" type="x-icon" href="/images/home.png">
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			font-family: Arial, sans-serif;
+			background-color: #f0f0f0;
+		}
+
+		.container {
+			position: relative;
+			height: 100vh;
+			background-image: url('/images/festivals.jpg');
+			background-size: cover;
+			background-position: center;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.search-box {
+			position: absolute;
+			top: 20px;
+			right: 120px;
+			background-color: #fff;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			padding: 5px 10px;
+		}
+
+		.menu-button {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			background-color: transparent;
+			border: none;
+			color: #fff;
+			font-size: 18px;
+			cursor: pointer;
+		}
+
+		.home-icon {
+			position: absolute;
+			top: 20px;
+			left: 20px;
+			background-color: transparent;
+			z-index: 1;
+			/* Ensure the icon is above other elements */
+		}
+
+		.home-icon img {
+			width: 50px;
+			height: 50px;
+		}
+
+		.navigation {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			/* Adjusted to align towards right */
+			display: flex;
+			align-items: center;
+		}
+
+		.navigation a {
+			text-decoration: none;
+			color: #fff;
+			margin: 0 10px;
+			font-size: 16px;
+			font-weight: bold;
+			transition: color 0.3s ease;
+		}
+
+		.navigation a:hover {
+			color: #ffcc00;
+			/* Change to your desired hover color */
+		}
+
+		.navigation a[href="/logout"]:hover {
+			border: 2px solid red;
+			padding: 5px 10px;
+			border-radius: 5px;
+		}
+
+
+		.events-container {
+			display: flex;
+			justify-content: center;
+			padding: 20px;
+		}
+
+		.event-column {
+			flex: 1;
+			margin: 0 10px;
+			background-color: #fff;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			border-radius: 5px;
+			padding: 20px;
+		}
+
+		.event-column h2 {
+			margin-top: 0;
+		}
+
+		.event-column p {
+			margin-bottom: 10px;
+		}
+
+		.event-description {
+			display: -webkit-box;
+			-webkit-line-clamp: 3;
+			/* Limit the number of lines */
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+		}
+
+		.show-more {
+			color: blue;
+			cursor: pointer;
+		}
+
+		/* Footer styles */
+		footer {
+			background-color: #333;
+			color: #fff;
+			padding: 20px;
+			text-align: center;
+		}
+
+		.event-image {
+			width: 200px;
+			/* Adjust the width as needed */
+			height: auto;
+			/* Maintain aspect ratio */
+		}
+
+		.get-tickets-button {
+			background-color: #ff3333;
+			/* Red background color */
+			color: #fff;
+			/* White text color */
+			border: none;
+			padding: 10px 20px;
+			font-size: 16px;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		.get-tickets-button:hover {
+			background-color: #ff6666;
+			/* Darker red background color on hover */
+		}
+
+		.event-column {
+			/* Add transition for fade-out effect */
+			transition: opacity 0.3s ease;
+		}
+
+		.event-column.past-event {
+			/* Style for past events */
+			opacity: 0.5;
+			/* Adjust opacity as desired */
+			pointer-events: none;
+			/* Disable pointer events for past events */
+		}
+
+		.toggle-buttons {
+			margin-bottom: 20px;
+			/* Added margin for spacing */
+		}
+
+		.toggle-buttons button {
+			background-color: #fff;
+			/* White background color */
+			color: #333;
+			/* Dark text color */
+			border: 1px solid #ccc;
+			padding: 10px 20px;
+			font-size: 16px;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		.toggle-buttons button.selected {
+			background-color: #ffcc00;
+			/* Yellow background color for selected button */
+			color: #fff;
+			/* White text color for selected button */
+			border: 1px solid #ffcc00;
+			/* Yellow border color for selected button */
+		}
+	</style>
+</head>
+
+<body>
+
+	<a href="/homePage" class="home-icon">
+		<img src="/images/home.png" alt="Home">
+	</a>
+
+	<div class="container">
+
+
+		<div class="navigation">
+			<a href="/eventRegistration">Register Event</a>
+			<a href="#footer">Contact</a>
+			<a href="/profile">My Profile</a>
+			<a href="/logout">Logout</a>
+		</div>
+
+		<div class="toggle-buttons">
+			<button onclick="showAvailableEvents()" id="availableEventsBtn" class="selected">Available Events</button>
+			<button onclick="showPastEvents()" id="pastEventsBtn">Past Events</button>
+		</div>
+
+		<div class="events-container" id="events-container">
+		</div>
+
+	</div>
+
+	<footer id="footer">
+		<p>Email: example@example.com</p>
+		<p>Phone: 123-456-7890</p>
+		<p>Address: 123 Street, City, Country</p>
+	</footer>
+
+	<script>
+		async function fetchEvents() {
+			const response = await fetch('/approvedEvents');
+			const events = await response.json();
+			const eventsContainer = document.getElementById('events-container');
+			const currentDate = new Date();
+
+			events.forEach(event => {
+				const eventColumn = document.createElement('div');
+				eventColumn.classList.add('event-column');
+				const title = document.createElement('h2');
+				title.textContent = event.event_name;
+				const description = document.createElement('p');
+				description.classList.add('event-description');
+				const truncatedDescription = truncateDescription(event.description);
+				description.innerHTML = truncatedDescription;
+
+				const fullDescription = document.createElement('span');
+				fullDescription.classList.add('full-description');
+				fullDescription.style.display = 'none';
+				fullDescription.innerHTML = event.description;
+
+				const showMoreLink = document.createElement('a');
+				showMoreLink.textContent = 'Show more';
+				showMoreLink.href = '#';
+				showMoreLink.addEventListener('click', (e) => {
+					e.preventDefault();
+					toggleDescription(description, fullDescription, showMoreLink);
+				});
+
+				const startDate = document.createElement('p');
+				startDate.textContent = `Start Date: ${new Date(event.start_date).toLocaleDateString()}`;
+				const endDate = document.createElement('p');
+				endDate.textContent = `End Date: ${new Date(event.end_date).toLocaleDateString()}`;
+
+				const eventEndDate = new Date(event.end_date);
+				if (eventEndDate < currentDate) {
+					eventColumn.classList.add('past-event');
+				}
+
+				const image = document.createElement('img');
+				image.classList.add('event-image');
+				image.src = `/images/${event.image_id.image_name}`;
+
+				const getTicketsButton = document.createElement('button');
+				getTicketsButton.textContent = 'Get Tickets';
+				getTicketsButton.classList.add('get-tickets-button');
+				getTicketsButton.addEventListener('click', () => {
+					window.location.href = `/getTickets?eventId=${event.event_id}`;
+				});
+
+				eventColumn.appendChild(image);
+				eventColumn.appendChild(title);
+				eventColumn.appendChild(description);
+				eventColumn.appendChild(fullDescription);
+				eventColumn.appendChild(showMoreLink);
+				eventColumn.appendChild(startDate);
+				eventColumn.appendChild(endDate);
+				eventColumn.appendChild(getTicketsButton);
+				eventsContainer.appendChild(eventColumn);
+			});
+
+			// Show Available Events by default
+			showAvailableEvents();
+		}
+
+		fetchEvents();
+
+		function truncateDescription(description) {
+			const words = description.split(' ');
+			if (words.length > 10) {
+				return words.slice(0, 10).join(' ') + '...';
+			}
+			return description;
+		}
+
+		function toggleDescription(descriptionElement, fullDescriptionElement, showMoreLink) {
+			const isTruncated = descriptionElement.innerHTML === truncateDescription(descriptionElement.innerHTML);
+			if (isTruncated) {
+				descriptionElement.innerHTML = fullDescriptionElement.innerHTML;
+				showMoreLink.textContent = 'Show less';
+			} else {
+				descriptionElement.innerHTML = truncateDescription(fullDescriptionElement.innerHTML);
+				showMoreLink.textContent = 'Show more';
+			}
+		}
+
+		function showAvailableEvents() {
+			document.querySelectorAll('.event-column.past-event').forEach(element => {
+				element.style.display = 'none';
+			});
+			document.querySelectorAll('.event-column:not(.past-event)').forEach(element => {
+				element.style.display = 'block';
+			});
+			document.getElementById('availableEventsBtn').classList.add('selected');
+			document.getElementById('pastEventsBtn').classList.remove('selected');
+		}
+
+		function showPastEvents() {
+			document.querySelectorAll('.event-column:not(.past-event)').forEach(element => {
+				element.style.display = 'none';
+			});
+			document.querySelectorAll('.event-column.past-event').forEach(element => {
+				element.style.display = 'block';
+			});
+			document.getElementById('availableEventsBtn').classList.remove('selected');
+			document.getElementById('pastEventsBtn').classList.add('selected');
+		}
+	</script>
+</body>
+
+</html>

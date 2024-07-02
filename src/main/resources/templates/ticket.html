@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" type="x-icon" href="/images/home.png">
+	<title>Get Tickets</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			line-height: 1.6;
+			margin: 0;
+			padding: 20px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			background-color: #333333;
+		}
+
+		.event-details {
+    width: 60%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f4f4f4;
+    position: absolute;
+    top: 55%;
+    left: 2%; /* Center horizontally within three-fourths width */
+    transform: translateY(-50%);
+}
+
+.container {
+    width: 25%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f4f4f4;
+    position: absolute;
+    top: 55%;
+    right: 5.5%; /* Center horizontally within one-fourth width */
+    transform: translateY(-50%);
+}
+
+		h1 {
+			text-align: center;
+			margin-bottom: 20px;
+		}
+
+		h2 {
+			text-align: center;
+			margin-bottom: 10px;
+		}
+
+		p {
+			margin-bottom: 5px;
+		}
+
+		label {
+			display: block;
+			margin-bottom: 10px;
+			font-weight: bold;
+		}
+
+		select,
+		button,
+		input[type="text"] {
+			width: 100%;
+			padding: 10px;
+			margin-bottom: 20px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			box-sizing: border-box;
+			font-size: 16px;
+		}
+
+		button {
+			background-color: #4CAF50;
+			color: white;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background-color: #45a049;
+		}
+
+		.home-icon {
+			position: absolute;
+			top: 20px;
+			left: 20px;
+			background-color: transparent;
+			z-index: 1;
+		}
+
+		.home-icon img {
+			width: 50px;
+			height: 50px;
+		}
+
+		.navigation {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			/* Adjusted to align towards right */
+			display: flex;
+			align-items: center;
+		}
+
+		.navigation a {
+			text-decoration: none;
+			color: red;
+			margin: 0 10px;
+			font-size: 16px;
+			font-weight: bold;
+			transition: color 0.3s ease;
+		}
+
+		.navigation a:hover {
+			color: #ffcc00;
+			/* Change to your desired hover color */
+		}
+
+		.navigation a[href="/logout"]:hover {
+			border: 2px solid red;
+			padding: 5px 10px;
+			border-radius: 5px;
+		}
+	</style>
+</head>
+
+<body>
+	<a href="/homePage" class="home-icon">
+		<img src="/images/home.png" alt="Home">
+	</a>
+
+	<div class="navigation">
+		<a href="/logout">Logout</a>
+	</div>
+
+	<!-- New event details container -->
+	<div class="event-details">
+		<img th:src="${imagePath}" alt="Event Image" style="max-width: 150px; position: absolute; top: 0; left:0;">
+		<h2 th:text="${event.event_name}"></h2>
+		<br>
+		<br>
+		<br>
+		<p>Description: <span th:text="${event.description}"></span></p>
+		<p>Start Date: <span th:text="${event.start_date}"></span></p>
+		<p>End Date: <span th:text="${event.end_date}"></span></p>
+		<p>Venue: <span th:text="${event.venue.venue_name}"></span></p>
+		<p>Address: <span th:text="${event.venue.address}"></span></p>
+
+	</div>
+
+	<!-- Existing container for ticket form -->
+	<div class="container">
+		<h1 th:text="${event.event_name}"></h1>
+		<form id="ticketForm">
+			<input type="hidden" name="eventId" th:value="${event.event_id}">
+
+			<label for="seatType">Select Seat Type:</label>
+			<select id="seatType" name="seatType"></select>
+			<label for="numSeatsAvailable">Number of Seats Available:</label>
+			<input type="text" id="numSeatsAvailable" name="numSeatsAvailable" readonly>
+
+			<label for="seatPrice">Seat Price:</label>
+			<input type="text" id="seatPrice" name="seatPrice" readonly>
+
+			<label for="numSeats">Number of Seats (Max 10):</label>
+			<select id="numSeats" name="numSeats">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+			</select>
+
+			<label for="paymentType">Payment Type:</label>
+			<select id="paymentType" name="paymentType">
+				<option value="Pay at the Event">Pay at the Event</option>
+
+			</select>
+			<button type="submit">Get Tickets</button>
+		</form>
+	</div>
+
+	<script>
+
+		let seatsData;
+
+		document.addEventListener('DOMContentLoaded', () => {
+			const seatTypeDropdown = document.getElementById('seatType');
+			const numSeatsAvailableInput = document.getElementById('numSeatsAvailable');
+			const seatPriceInput = document.getElementById('seatPrice');
+			const numSeatsDropdown = document.getElementById('numSeats'); // Updated line
+			const ticketForm = document.getElementById('ticketForm');
+			const paymentTypeDropdown = document.getElementById('paymentType');
+
+			async function fetchSeatsByEventIdAndType(seatType, eventId) {
+				try {
+					const response = await fetch(`/getSeatsByEventIdandType?seatType=${seatType}&id=${eventId}`);
+					seatsData = await response.json();
+					updateSeatDetails(seatsData);
+				} catch (error) {
+					console.error('Error fetching seats:', error);
+				}
+			}
+
+			function updateSeatDetails(seatsData) {
+				if (seatsData && seatsData.no_of_seats > 0) {
+					numSeatsAvailableInput.value = seatsData.available_seats;
+					seatPriceInput.value = seatsData.seat_price;
+				} else {
+					numSeatsAvailableInput.value = '';
+					seatPriceInput.value = '';
+				}
+			}
+
+			seatTypeDropdown.addEventListener('change', () => {
+				const selectedSeatType = seatTypeDropdown.value;
+				if (selectedSeatType) {
+					const eventId = document.querySelector('[name="eventId"]').value;
+					fetchSeatsByEventIdAndType(selectedSeatType, eventId);
+				}
+			});
+
+			ticketForm.addEventListener('submit', async (event) => {
+				event.preventDefault();
+				const selectedSeatType = seatTypeDropdown.value;
+				const eventId = document.querySelector('[name="eventId"]').value;
+				const numSeats = numSeatsDropdown.value; // Updated line
+				const seatPrice = seatPriceInput.value;
+				const paymentType = paymentTypeDropdown.value;
+
+				try {
+					const response = await fetch('/buyTickets', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						body: new URLSearchParams({
+							eventId: eventId,
+							seatType: selectedSeatType,
+							selectedSeats: numSeats,
+							paymentType: paymentType,
+							seatId: seatsData.seat_id
+						})
+					});
+
+					if (response.ok) {
+						alert('Registered Successfully');
+						window.location.href = '/homePage'; // Redirect to success page
+					} else {
+						console.error('Failed to buy tickets:', response.statusText);
+					}
+				} catch (error) {
+					console.error('Error buying tickets:', error);
+				}
+			});
+
+			async function fetchSeatTypes() {
+				try {
+					const response = await fetch('/seatTypes');
+					const seatTypesData = await response.json();
+					const initialOption = document.createElement('option');
+					initialOption.value = '';
+					initialOption.textContent = 'Select Seat Type';
+					seatTypeDropdown.appendChild(initialOption);
+
+					seatTypesData.forEach(seatType => {
+						const option = document.createElement('option');
+						option.value = seatType;
+						option.textContent = seatType;
+						seatTypeDropdown.appendChild(option);
+					});
+
+				} catch (error) {
+					console.error('Error fetching seat types:', error);
+				}
+			}
+
+			fetchSeatTypes();
+		});
+
+	</script>
+</body>
+
+</html>

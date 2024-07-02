@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="shortcut icon" type="x-icon" href="/images/home.png">
+	<title>User Profile</title>
+
+	<style>
+		body {
+			padding-top: 80px;
+			background-color: #333333;
+			color: #ffffff;
+			/* Text color for better contrast */
+			font-family: Arial, sans-serif;
+			/* Specify a fallback font family */
+		}
+
+		.home-icon {
+			position: absolute;
+			top: 20px;
+			left: 20px;
+			background-color: transparent;
+			z-index: 1;
+		}
+
+		.home-icon img {
+			width: 50px;
+			height: 50px;
+		}
+
+		.content {
+			margin-top: 20px;
+			padding: 20px;
+			background-color: #f4f4f4;
+			border-radius: 5px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			color: #333333;
+			/* Text color for content */
+		}
+
+		h2 {
+			color: #ffcc00;
+			/* Header color */
+			margin-bottom: 15px;
+			/* Add some space below headers */
+		}
+
+		p {
+			margin-bottom: 10px;
+			/* Add space below paragraphs */
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 20px;
+			/* Add margin above the table */
+		}
+
+		th,
+		td {
+			padding: 8px;
+			border: 1px solid #ddd;
+			text-align: left;
+		}
+
+		th {
+			background-color: #f2f2f2;
+		}
+
+		.tabs {
+			margin-bottom: 10px;
+		}
+
+		.tabs button {
+			padding: 8px 12px;
+			/* Adjust button padding */
+			cursor: pointer;
+			background-color: #4CAF50;
+			/* Green color for buttons */
+			color: #ffffff;
+			/* Text color for buttons */
+			border: none;
+			border-radius: 5px;
+			margin-right: 10px;
+			/* Add space between buttons */
+		}
+
+		.tabs button:hover {
+			background-color: #45a049;
+			/* Darker green on hover */
+		}
+
+		.navigation {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			display: flex;
+			align-items: center;
+		}
+
+		.navigation a {
+			text-decoration: none;
+			color: #ffffff;
+			/* White color for links */
+			margin-left: 15px;
+			/* Add space between logout and home link */
+			font-size: 16px;
+			font-weight: bold;
+			transition: color 0.3s ease;
+		}
+
+		.navigation a:hover {
+			color: #ffcc00;
+		}
+
+		.navigation a[href="/logout"]:hover {
+			border: 2px solid #ffffff;
+			/* White border on hover */
+			padding: 5px 10px;
+			border-radius: 5px;
+		}
+
+		.dropdown {
+			position: relative;
+			display: inline-block;
+		}
+
+		.dropdown-content {
+			display: none;
+			position: absolute;
+			background-color: #f9f9f9;
+			min-width: 160px;
+			box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+			z-index: 1;
+		}
+
+		.dropdown:hover .dropdown-content {
+			display: block;
+		}
+
+		.dropdown-content a {
+			color: black;
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+		}
+
+		.dropdown-content a:hover {
+			background-color: #f1f1f1;
+		}
+
+		/* Modal popup styles */
+		.modal {
+			display: none;
+			/* Hidden by default */
+			position: fixed;
+			/* Stay in place */
+			z-index: 1;
+			/* Sit on top */
+			left: 0;
+			top: 0;
+			width: 100%;
+			/* Full width */
+			height: 100%;
+			/* Full height */
+			overflow: auto;
+			/* Enable scrolling if needed */
+			background-color: rgba(0, 0, 0, 0.4);
+			/* Black background with opacity */
+		}
+
+		.modal-content {
+			background-color: #fefefe;
+			margin: 15% auto;
+			padding: 20px;
+			border: 1px solid #888;
+			width: 80%;
+			border-radius: 5px;
+			position: relative;
+		}
+
+		.close {
+			color: #aaa;
+			float: right;
+			font-size: 28px;
+			font-weight: bold;
+		}
+
+		.close:hover,
+		.close:focus {
+			color: black;
+			text-decoration: none;
+			cursor: pointer;
+		}
+
+		.rating {
+			margin-top: 10px;
+		}
+
+		.rating .star {
+			font-size: 30px;
+			cursor: pointer;
+			color: #ccc;
+		}
+
+		.rating .star:hover,
+		.rating .star.active {
+			color: #ffcc00;
+			/* Yellow color for active/starred ratings */
+		}
+
+
+
+		/* Styles for the submit button */
+		.submit-btn {
+			display: block;
+			width: 100%;
+			padding: 10px;
+			margin-top: 10px;
+			background-color: #3498db;
+			color: #fff;
+			border: none;
+			cursor: pointer;
+		}
+
+		.tabs button.active {
+			background-color: rgb(255, 0, 0);
+			/* Darker green for active button */
+		}
+	</style>
+</head>
+
+<body>
+	<a href="/homePage" class="home-icon">
+		<img src="/images/home.png" alt="Home">
+	</a>
+
+	<div class="navigation">
+		<a href="/logout">Logout</a>
+	</div>
+
+	<div class="content">
+		<h2>User Details</h2>
+		<label for="username">Username:</label>
+		<span th:text="${userDetails.username}" id="username"></span><br>
+
+		<label for="phone">Phone:</label>
+		<span th:text="${userDetails.phone}" id="phone"></span><br>
+
+		<label for="email">Email:</label>
+		<span th:text="${userDetails.email}" id="email"></span><br>
+		<br>
+
+		<div class="tabs">
+			<!-- Tabs buttons -->
+			<button onclick="filterTable('past')">Past</button>
+			<button onclick="filterTable('current')">Current</button>
+			<button onclick="filterTable('future')">Future</button>
+		</div>
+
+		<h2>User Profile Details</h2>
+		<table id="profileTable">
+			<thead>
+				<!-- Table headers -->
+				<tr>
+					<th></th>
+					<th>Event Name</th>
+					<th>Event Start Date</th>
+					<th>Event End Date</th>
+					<th>Venue Name</th>
+					<th>Registration Date</th>
+					<th>No of Seats</th>
+					<th>Seat Type</th>
+					<th>Amount</th>
+					<th>Payment Method</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="profile : ${userProfile}">
+					<input type="hidden" name="event_id" th:value="${profile.event_id}" />
+					<!-- Table data with dropdown menu -->
+					<td class="dropdown">&#8230;
+						<div class="dropdown-content">
+							<a href="#" class="add-comment-btn">Add Comment</a>
+						</div>
+					</td>
+					<td th:text="${profile.event_name}"></td>
+					<td th:text="${#dates.format(profile.start_date, 'yyyy-MM-dd HH:mm')}"></td>
+					<td th:text="${#dates.format(profile.end_date, 'yyyy-MM-dd HH:mm')}"></td>
+					<td th:text="${profile.venue_name}"></td>
+					<td th:text="${#dates.format(profile.registration_date, 'yyyy-MM-dd HH:mm')}"></td>
+					<td th:text="${profile.no_of_seats}"></td>
+					<td th:text="${profile.seat_type}"></td>
+					<td th:text="${profile.amount}"></td>
+					<td th:text="${profile.payment_method}"></td>
+					<td th:text="${profile.status}"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- Modal popup structure -->
+	<div id="commentModal" class="modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<h2>Add Comment</h2>
+			<input type="text" id="commentInput" placeholder="Enter your comment">
+			<div class="rating">
+				<span class="star" data-rating="1">&#9733;</span>
+				<span class="star" data-rating="2">&#9733;</span>
+				<span class="star" data-rating="3">&#9733;</span>
+				<span class="star" data-rating="4">&#9733;</span>
+				<span class="star" data-rating="5">&#9733;</span>
+			</div>
+			<button class="submit-btn">Submit</button>
+		</div>
+	</div>
+
+
+	<script>
+		// Filter table function
+		function filterTable(tab) {
+    const currentDate = new Date();
+    const rows = document.querySelectorAll("#profileTable tbody tr");
+
+    // Toggle active class on tab buttons
+    const tabs = document.querySelectorAll(".tabs button");
+    tabs.forEach(tabBtn => {
+        tabBtn.classList.remove("active");
+        if (tabBtn.textContent.toLowerCase() === tab.toLowerCase()) {
+            tabBtn.classList.add("active");
+        }
+    });
+
+    rows.forEach(row => {
+        const startDateText = row.cells[2].textContent; // Assuming the start date is in the third cell
+        const startDate = new Date(startDateText);
+
+        switch (tab) {
+            case 'past':
+                row.style.display = startDate < currentDate ? "table-row" : "none";
+                break;
+            case 'current':
+                const endDateText = row.cells[3].textContent; // Assuming the end date is in the fourth cell
+                const endDate = new Date(endDateText);
+                row.style.display = startDate <= currentDate && endDate >= currentDate ? "table-row" : "none";
+                break;
+            case 'future':
+                row.style.display = startDate > currentDate ? "table-row" : "none";
+                break;
+            default:
+                row.style.display = "none";
+        }
+    });
+}
+
+
+		document.addEventListener("DOMContentLoaded", function () {
+			const modal = document.getElementById("commentModal");
+			const openModalBtns = document.querySelectorAll(".add-comment-btn");
+			const closeModalBtn = document.querySelector(".close");
+			const submitBtn = document.querySelector(".submit-btn");
+			const stars = document.querySelectorAll(".star");
+
+			// Function to open the modal
+			function openModal() {
+				modal.style.display = "block";
+			}
+
+			// Function to close the modal
+			function closeModal() {
+				modal.style.display = "none";
+			}
+
+			// Event listeners for opening the modal
+			openModalBtns.forEach(btn => {
+				btn.addEventListener("click", openModal);
+			});
+
+			// Event listener for closing the modal
+			closeModalBtn.addEventListener("click", closeModal);
+
+			// Event listener for submitting the form
+			submitBtn.addEventListener("click", function () {
+				const comment = document.getElementById("commentInput").value;
+				const rating = document.querySelector(".star.active").getAttribute("data-rating");
+				const eventId = document.querySelector("input[name='event_id']").value;
+
+				// Make an AJAX POST request using the Fetch API
+				fetch('/addComment?comment=' + encodeURIComponent(comment) + '&rating=' + encodeURIComponent(rating) + '&event_id=' + encodeURIComponent(eventId), {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						// Add any other headers if required (e.g., authorization token)
+					}
+				})
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('Network response was not ok');
+						}
+						return response.text();
+					})
+					.then(data => {
+						// Close the modal after successful submission
+						closeModal();
+						// Display success response in an alert
+						alert(data);
+					})
+					.catch(error => {
+						// Handle any errors that occurred during the fetch
+						console.error('There was a problem with your fetch operation:', error);
+						// Optionally display an error message in an alert
+						alert('Failed to add comment: ' + error.message);
+					});
+			});
+
+			// Event listener for star ratings
+			stars.forEach(star => {
+				star.addEventListener("click", function () {
+					stars.forEach(s => s.classList.remove("active"));
+					star.classList.add("active");
+				});
+			});
+		});
+
+	</script>
+</body>
+
+</html>

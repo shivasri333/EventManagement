@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Admin Home</title>
+	<link rel="shortcut icon" type="x-icon" href="/images/home.png">
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			font-family: Arial, sans-serif;
+			background-color: #f0f0f0;
+			/* Add background image */
+			background-image: url('/images/black-bg.png');
+			/* Set background image to cover the entire page */
+			background-size: cover;
+			/* Center the background image */
+			background-position: center;
+			/* Ensure the background image doesn't repeat */
+			background-repeat: no-repeat;
+		}
+
+
+		.container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+		}
+
+		.card {
+			background-color: #fff;
+			background-size: cover;
+			background-position: center;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			border-radius: 5px;
+			padding: 20px;
+			margin: 20px;
+			text-align: center;
+			width: 300px;
+			/* Adjust the width */
+			height: 300px;
+			/* Adjust the height */
+		}
+
+
+		.card h2 {
+			margin-top: 0;
+		}
+
+		.card-button {
+			background-color: #ff3333;
+			color: #fff;
+			border: none;
+			padding: 10px 20px;
+			font-size: 16px;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		.card-button:hover {
+			background-color: #ff6666;
+		}
+
+		/* Background images for each card */
+		.events-card {
+			background-image: url('/images/events-bg.jpg');
+		}
+
+		.venues-card {
+			background-image: url('/images/venues-bg.jpg');
+		}
+
+
+		.reviews-card {
+			background-image: url('/images/reviews-bg.jpg');
+		}
+
+		.home-icon {
+			position: absolute;
+			top: 20px;
+			left: 20px;
+			background-color: transparent;
+			z-index: 1;
+			/* Ensure the icon is above other elements */
+		}
+
+		.home-icon img {
+			width: 50px;
+			height: 50px;
+		}
+
+		.navigation {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			/* Adjusted to align towards right */
+			display: flex;
+			align-items: center;
+		}
+
+		.navigation a {
+			text-decoration: none;
+			color: #fff;
+			margin: 0 10px;
+			font-size: 16px;
+			font-weight: bold;
+			transition: color 0.3s ease;
+		}
+
+		.navigation a:hover {
+			color: #ffcc00;
+			/* Change to your desired hover color */
+		}
+
+		.navigation a[href="/logout"]:hover {
+			border: 2px solid red;
+			padding: 5px 10px;
+			border-radius: 5px;
+		}
+		
+		footer {
+			background-color: #333;
+			color: #fff;
+			padding: 20px;
+			text-align: center;
+		}
+	</style>
+</head>
+
+<body>
+	<a href="/adminHomePage" class="home-icon">
+		<img src="/images/home.png" alt="Home">
+	</a>
+
+	<div class="navigation">
+		<a href="/pendingForApproval">Pending For Approval</a>
+		<a href="#footer">Contact</a>
+		<a href="/userProfile">My Profile</a>
+		<a href="/logout">Logout</a>
+	</div>
+
+	<div class="container">
+		<div class="card events-card">
+
+			<button class="card-button" onclick="location.href='/admin/events'">Manage Events</button>
+		</div>
+
+		<div class="card venues-card">
+
+			<button class="card-button" onclick="location.href='/admin/venues'">Manage Venues</button>
+		</div>
+
+		<div class="card reviews-card">
+
+			<button class="card-button" onclick="location.href='/admin/reviews'">Manage Reviews</button>
+		</div>
+	</div>
+	
+	<footer id="footer">
+		<p>Email: example@example.com</p>
+		<p>Phone: 123-456-7890</p>
+		<p>Address: 123 Street, City, Country</p>
+	</footer>
+
+	<script>
+		// Function to scroll to the footer
+		function scrollToFooter() {
+			const footer = document.getElementById('footer');
+			footer.scrollIntoView({behavior: 'smooth'});
+		}
+
+		// Get the Contact link and add event listener
+		const contactLink = document.querySelector('.navigation a[href="#footer"]');
+		contactLink.addEventListener('click', function (event) {
+			event.preventDefault();
+			scrollToFooter();
+		});
+	</script>
+
+</body>
+
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="x-icon" href="/images/home.png">
+    <title>All Events</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .status.pending {
+            color: orange;
+        }
+
+        .status.confirmed {
+            color: green;
+        }
+
+        .status.cancelled {
+            color: red;
+        }
+
+        .home-icon {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: transparent;
+            z-index: 1;
+        }
+
+        .home-icon img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .edit-btn {
+            background-color: rgb(255, 255, 255);
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        
+        .navigation {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			/* Adjusted to align towards right */
+			display: flex;
+			align-items: center;
+		}
+
+		.navigation a {
+			text-decoration: none;
+			color: rgb(255, 0, 0);
+			margin: 0 10px;
+			font-size: 16px;
+			font-weight: bold;
+			transition: color 0.3s ease;
+		}
+
+		.navigation a:hover {
+			color: #ffcc00;
+			/* Change to your desired hover color */
+		}
+
+		.navigation a[href="/logout"]:hover {
+			border: 2px solid red;
+			padding: 5px 10px;
+			border-radius: 5px;
+		}
+    </style>
+</head>
+<body>
+	<a href="/adminHomePage" class="home-icon">
+		<img src="/images/home.png" alt="Home">
+	</a>
+	
+	<div class="navigation">
+		<a href="/eventRegistration" class="edit-btn">Add New Event</a>
+		<a href="/logout">Logout</a>
+	</div>
+	
+    <h1>All Events</h1>
+    <table>
+        <thead>
+            <tr>
+				<th> </th>
+                <th>Event Name</th>
+                <th>Description</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Venue</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="event : ${events}">
+				<td>
+					<a th:href="@{'/admin/editEvent/' + ${event.event_id}}">Edit</a>
+				</td>
+                <td th:text="${event.event_name}">Event Name</td>
+                <td th:text="${event.description}">Description</td>
+                <td th:text="${event.start_date}">Start Date</td>
+                <td th:text="${event.end_date}">End Date</td>
+                <td th:text="${event.venue.venue_name}">Venue</td>
+                <td th:text="${event.status}">Status</td>
+            </tr>
+        </tbody>
+    </table>
+
+<script>
+	 function editEvent(eventId) {
+        // You can implement your logic to handle the edit action, for example, redirect to an edit page
+        window.location.href = '/admin/editEvent.html?eventId=' + eventId;
+    }
+</script>
+</body>
+</html>

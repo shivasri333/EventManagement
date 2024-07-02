@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}" />
+    <title>Fleet Xpress Menu</title>
+</head>
+<body>
+    <div class="header">
+        <h3 class="user-name"><span th:text="${userName}"></span></h3>
+        <a href="/home" class="logo">Fleet Xpress</a>
+        <a href="/logout" class="logout">Logout</a>
+    </div>
+
+    <div class="menu-container">
+        <div class="menu-dropdown">
+            <a class="menu-button">Vehicles &#9660;</a>
+            <div class="menu-dropdown-content">
+                <a href="/admin/vehicles">All Vehicles</a>
+                <a href="/admin/driverVehicles">Driver Assigned Vehicles</a>
+                <!-- Add more vehicle categories as needed -->
+            </div>
+        </div>
+        <a href="/admin/drivers" class="menu-button">Drivers</a>
+        <a href="/admin/maintenance" class="menu-button">Maintenance</a>
+        <a href="/admin/fuel" class="menu-button">Fuel</a>
+        <a href="/admin/routes" class="menu-button">Routes</a>
+    </div>
+
+    <div class="guidelines">
+        <h2>User Guidelines</h2>
+        <ul>
+            <li><strong>Regular Maintenance:</strong> Establish a comprehensive maintenance schedule for all vehicles. Regular inspections and timely repairs can extend the lifespan of the fleet and reduce downtime.</li>
+            <li><strong>Vehicle Selection:</strong> Choose the right vehicles for the specific needs of your organization. Consider factors like fuel efficiency, payload capacity, and safety features.</li>
+            <li><strong>Route Optimization:</strong> Implement route optimization strategies to reduce fuel consumption and improve delivery or service efficiency.</li>
+            <li><strong>Compliance with Regulations:</strong> Stay informed about and ensure compliance with local, state, and federal regulations, including safety standards and emissions requirements.</li>
+            <li><strong>Driver Monitoring:</strong> Use driver monitoring tools and technologies to track and assess driver behavior, including speeding, harsh braking, and idling. Provide feedback and training to improve driver performance.</li>
+        </ul>
+    </div>
+</body>
+</html>

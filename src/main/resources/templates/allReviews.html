@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="x-icon" href="/images/home.png">
+    <title>All Reviews</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .home-icon {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: transparent;
+            z-index: 1;
+        }
+
+        .home-icon img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .navigation {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            /* Adjusted to align towards right */
+            display: flex;
+            align-items: center;
+        }
+
+        .navigation a {
+            text-decoration: none;
+            color: rgb(255, 0, 0);
+            margin: 0 10px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .navigation a:hover {
+            color: #ffcc00;
+            /* Change to your desired hover color */
+        }
+
+        .navigation a[href="/logout"]:hover {
+            border: 2px solid red;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .delete-icon {
+            cursor: pointer;
+            color: red;
+            transition: color 0.3s ease;
+        }
+
+        .delete-icon:hover {
+            color: darkred;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="/adminHomePage" class="home-icon">
+        <img src="/images/home.png" alt="Home">
+    </a>
+
+    <div class="navigation">
+        <a href="/logout">Logout</a>
+    </div>
+
+    <h1>All Reviews</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Event ID</th>
+                <th>User</th>
+                <th>Rating</th>
+                <th>Comment</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Use Thymeleaf each loop to iterate over reviews -->
+            <tr th:each="review : ${reviews}">
+                <!-- Display review details in table rows -->
+                <td th:text="${review.event.event_name}"></td>
+                <td th:text="${review.user.username}"></td>
+                <td th:text="${review.rating}"></td>
+                <td th:text="${review.comment}"></td>
+                <td>
+                    <a th:href="@{'/admin/deleteReview/' + ${review.review_id}}"
+                       th:onclick="|event.preventDefault(); deleteReview(${review.review_id});|"
+                       class="delete-icon">&#x1F5D1;</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script th:inline="javascript">
+        /* JavaScript function to handle redirection after successful review deletion */
+        function handleDeleteResponse() {
+            // Assuming successful response means HTTP status 200
+            if (this.status === 200) {
+                window.location.href = '/admin/reviews'; // Redirect to the desired URL
+            } else {
+                alert('Error deleting review.'); // Show an error message if deletion fails
+            }
+        }
+
+        function deleteReview(reviewId) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/admin/deleteReview/' + reviewId, true);
+            xhr.onload = handleDeleteResponse;
+            xhr.send();
+        }
+    </script>
+
+</body>
+
+</html>

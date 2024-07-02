@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Management </title>
+  <link rel="shortcut icon" type="x-icon" href="/images/home.png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('/images/homeback.png');
+			/* Path to your background image */
+			background-size: cover;
+			/* Cover the entire background */
+			background-repeat: no-repeat;
+			
+    }
+    .container {
+      display: flex;
+      align-items: center;
+      height: calc(100vh - 80px); /* Adjust for the height of the notification bar */
+    }
+    .notification-bar {
+      background-color: #f0f0f0;
+      padding: 10px 20px;
+      text-align: right;
+    }
+    .right-side {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: flex-start;
+    }
+    h1 {
+      font-size: 48px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: rgb(0, 0, 0);
+      
+    }
+    .everything {
+      color: rgb(0, 0, 0); /* Different color for "everything" */
+    }
+    .event-image {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      margin: 5px;
+    }
+    .button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      margin-top: 20px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .login-button {
+      background-color: #28a745;
+      margin-right: 10px;
+    }
+    .register-button {
+      background-color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  <!-- Notification bar -->
+  <div class="notification-bar">
+    <a href="login.html" class="button login-button" id="loginButton">Sign In</a>
+  </div>
+
+  <!-- Sign In button -->
+  
+  
+  <div class="container">
+    <div class="left-side">
+      <h1>One platform for <span class="everything">everything</span> events</h1>
+    </div>
+    <div class="right-side">
+      <!-- Images of different events -->
+      <img src="images/events.png" alt="Event">
+    </div>
+  </div>
+
+  <script>
+    // Function to handle the login button click event
+    document.getElementById('loginButton').addEventListener('click', function(event) {
+      event.preventDefault(); // Prevent the default action of clicking a link
+      
+      // Make an HTTP request to your login API endpoint
+      fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+          // Add any other headers if required
+        },
+        body: JSON.stringify({
+          // Add any login data you need to send to the server (e.g., username, password)
+        })
+      })
+      .then(response => {
+        // Handle the response from the server
+        if (response.ok) {
+          // Redirect the user to the desired page upon successful login
+          window.location.href = 'dashboard.html'; // Change 'dashboard.html' to your actual dashboard page
+        } else {
+          // Handle authentication error (e.g., display error message)
+          console.error('Login failed');
+        }
+      })
+      .catch(error => {
+        // Handle network errors
+        console.error('Error:', error);
+      });
+    });
+  </script>
+</body>
+</html>

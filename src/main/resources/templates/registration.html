@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Event Management</title>
+	<link rel="shortcut icon" type="x-icon" href="/images/home.png">
+	<style>
+		/* Container styles */
+		.container {
+			max-width: 450px;
+			margin: 0 auto;
+			padding: 30px;
+			background-color: #f4f4f4;
+			border: 5px solid #ccc;
+			border-radius: 5px;
+			box-shadow: 0 0px 10px rgba(0, 0, 0, 0.2);
+		}
+
+		/* Heading styles */
+		h1 {
+			font-size: 24px;
+			color: #333;
+			text-align: center;
+			margin-bottom: 20px;
+		}
+
+		/* Form styles */
+		form {
+			display: flex;
+			flex-direction: column;
+		}
+
+		/* Input field styles */
+		input[type="text"],
+		input[type="password"],
+		select {
+			width: 100%;
+			padding: 10px;
+			margin: 10px 0;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+		}
+
+		/* Label styles */
+		label {
+			font-size: 16px;
+			margin-bottom: 5px;
+		}
+
+		/* Button styles */
+		button[type="submit"],
+		button.toggle-password {
+			width: 100%;
+			padding: 10px;
+			background-color: #007bff;
+			color: #fff;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			margin-top: 10px;
+		}
+
+		button[type="submit"]:hover,
+		button.toggle-password:hover {
+			background-color: #0056b3;
+		}
+
+		/* Role selection dropdown styles */
+		select {
+			height: 40px;
+		}
+
+		/* Already have an account link styles */
+		p {
+			text-align: center;
+			font-size: 16px;
+			margin-top: 15px;
+			margin-bottom: 10px;
+		}
+
+		a {
+			color: #007bff;
+			text-decoration: none;
+		}
+
+		a:hover {
+			text-decoration: underline;
+		}
+
+		/* Additional style for error messages */
+		.error-message {
+			color: red;
+			font-size: 14px;
+		}
+
+		.home-icon {
+			position: absolute;
+			top: 10px;
+			left: 10px;
+		}
+	</style>
+</head>
+<span th:text="${message}"></span>
+
+<body style="background-image: url('images/back.png'); background-size: cover; background-repeat: no-repeat;font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;">
+	<a href="/" class="home-icon">
+		<!-- You can replace the content inside the <span> tag with your preferred home icon -->
+		<img src="/images/home.png" alt="Home" style="width: 50px; height: 50px;">
+	</a>
+	<div class="container">
+		<div id="successBanner" class="success-banner" style="display: none;">
+			Registration successful! You can now <a href="/login">login here</a>.
+		</div>
+		<h1>Registration</h1>
+		<form action="/registration" method="post" onsubmit="return validateForm()">
+
+			<label for="username">User Id:</label>
+			<input type="text" id="username" name="username" required="">
+
+			<label for="phone">Phone:</label>
+			<input type="text" id="phone" name="phone" required="" maxlength="10">
+
+			<label for="email">Email:</label>
+			<input type="text" id="email" name="email" required="">
+
+			<label for="password">Password:</label>
+			<input type="password" id="password" name="password" required="">
+
+			<!-- Add a toggle button -->
+			<button type="button" class="toggle-password" onclick="togglePasswordVisibility()">Show Password</button>
+
+			<button type="submit" onclick="handleSuccessfulRegistration()">Sign Up</button>
+		</form>
+		<p>Already have an account? <a href="/login">Login here</a></p>
+		<br>
+		<p><a href="/admin/registration">Admin Sign Up here</a></p>
+	</div>
+
+
+	<!-- JavaScript to toggle password visibility and validate email -->
+	<script>
+		function togglePasswordVisibility() {
+			var passwordInput = document.getElementById("password");
+			if (passwordInput.type === "password") {
+				passwordInput.type = "text";
+			} else {
+				passwordInput.type = "password";
+			}
+		}
+
+		function validateEmail(email) {
+			return email.includes('@') && email.includes('.');
+		}
+
+		function validateForm() {
+			var emailInput = document.getElementById("email");
+			var isValidEmail = validateEmail(emailInput.value);
+
+			if (!isValidEmail) {
+				var errorMessage = document.createElement("span");
+				errorMessage.className = "error-message";
+				errorMessage.textContent = "Invalid email format";
+				emailInput.parentNode.appendChild(errorMessage);
+				return false;
+			}
+
+			return true;
+		}
+
+		function showSuccessBanner() {
+			var successBanner = document.getElementById("successBanner");
+			successBanner.style.display = "block";
+		}
+
+		function handleSuccessfulRegistration() {
+			var registrationSuccessful = true;
+
+			if (registrationSuccessful) {
+				showSuccessBanner();
+			}
+		}
+
+	</script>
+</body>
+
+</html>
